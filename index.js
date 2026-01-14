@@ -9,6 +9,7 @@ const app = express()
 const port = 3000
 
 console.log('iniciando aplicacion baby')
+console.log("Hola Eli")
 console.log('iniciando proceso')
 
 app.get('/productoPorCategoria', async (req, res) => {
