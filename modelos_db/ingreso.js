@@ -11,5 +11,6 @@ export const traerTodosIngresos = async (conexion) => {
 
 // FUNCIÓN PARA TRAER LOS PRODUCTOS QUE SE VENCEN A PARTIR DE TAL FECHA
 
+
 // FUNCIÓN PARA CREAR UN INGRESO
 

@@ -1,7 +1,7 @@
-import iniciardb from "./conexion_db.js"
-import * as categoriadb from "./categoria.js"
-import * as productodb from "./productos.js"
-import * as ingresodb from "./ingreso.js"
+import iniciardb from "./modelos_db/conexion_db.js"
+import * as categoriadb from "./modelos_db/categoria.js"
+import * as productodb from "./modelos_db/productos.js"
+import * as ingresodb from "./modelos_db/ingreso.js"
 import express from 'express'
 
 const conexion = await iniciardb()
