@@ -8,7 +8,7 @@ const conexion = await iniciardb()
 const app = express()
 const port = 3000
 
-console.log('iniciando')
+console.log('iniciando aplicacion baby')
 
 app.get('/productoPorCategoria', async (req, res) => {
     const categoria = req.query.categoria;
