@@ -8,6 +8,8 @@ const conexion = await iniciardb()
 const app = express()
 const port = 3000
 
+console.log('iniciando')
+
 app.get('/productoPorCategoria', async (req, res) => {
     const categoria = req.query.categoria;
     const productos = await productodb.traerProductoPorCategoria(conexion, categoria)
@@ -23,5 +25,5 @@ app.get('/productoPorId', async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
