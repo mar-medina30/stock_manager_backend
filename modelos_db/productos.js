@@ -3,8 +3,8 @@ import conexion_db from "./conexion_db.js"
 export const traerTodosProductos = async (conexion) => {
     try {
         const [results] = await conexion.query(
-        'SELECT * FROM `producto`'
-    );
+            'SELECT * FROM `producto`'
+        );
         console.log(results)
         return results
     } catch (err) {
@@ -34,7 +34,21 @@ export const traerProductoPorID = async (conexion, id_a_buscar) => {
         )
         console.log(results)
         return results
-    } catch(err) {
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+//FUNCIÒN PARA SABER EL TOTAL DE LA CANTIDAD DE PRODUCTOS QUE TENEMOS EN CADA CATEGORÌA
+
+export const totalDeProductosPorCategoria = async (conexion) => {
+    try {
+        const [result] = await conexion.query(
+            "SELECT c. nombre, i.cantidad as ingresos, e.cantidad as egresos, i.cantidad - e.cantidad as 'stock' FROM ingreso i JOIN producto p ON i.producto_id = p.id JOIN categoria c ON p.categoria_id = c.id join egreso e on p.id = e.producto_id"
+        )
+        console.log(result)
+        return result
+    } catch (err) {
         console.log(err)
     }
 }
@@ -47,7 +61,7 @@ export const traerProductoPorCategoria = async (conexion, categoria_a_buscar) =>
         )
         console.log(results)
         return results
-    } catch(err) {
+    } catch (err) {
         console.log(err)
     }
 }
