@@ -29,22 +29,27 @@ app.get('/rangoDeVencimiento', async (req, res) => {
 })
 
 app.delete('/eliminarProducto', async (req, res) => {
-    const {id} = req.query
+    const { id } = req.query
     const producto = await productodb.eliminarProducto(conexion, id)
     res.send(producto)
 })
 
+app.get('/stockPorCategoria', async (req, res) => {
+    const stock = await ingresodb.totalDeProductosPorCategoria(conexion)
+    res.send(stock)
+})
+
 app.get('/calcularGanancia', async (req, res) => {
-    const {fecha_inicio, fecha_fin} = req.query
+    const { fecha_inicio, fecha_fin } = req.query
     const ganancia = await egresodb.calcularGanancia(conexion, fecha_inicio, fecha_fin)
     res.send(ganancia)
 })
 
-app.post('/crearCategoria', async (req,res) => {
+app.post('/crearCategoria', async (req, res) => {
     console.log(req.body)
-    const {nombre} = req.body
+    const { nombre } = req.body
     const categoria = await categoriadb.crearCategoria(conexion, nombre)
-    res.json({nombre, id:categoria.insertId})
+    res.json({ nombre, id: categoria.insertId })
 })
 
 app.listen(port, () => {
