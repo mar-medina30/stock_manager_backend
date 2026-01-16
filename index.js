@@ -8,10 +8,6 @@ const conexion = await iniciardb()
 const app = express()
 const port = 3000
 
-console.log('iniciando aplicacion baby')
-console.log("Hola Eli")
-console.log('iniciando proceso')
-
 app.get('/productoPorCategoria', async (req, res) => {
     const categoria = req.query.categoria;
     const productos = await productodb.traerProductoPorCategoria(conexion, categoria)
@@ -24,10 +20,13 @@ app.get('/productoPorId', async (req, res) => {
     res.send(producto)
 })
 
-
+app.get('/rangoDeVencimiento', async (req, res) => {
+    const { fecha_inicio, fecha_fin } = req.query
+    const producto = await ingresodb.rangoVencimientos(conexion, fecha_inicio, fecha_fin)
+    res.send(producto)
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
-console.log("Fin")
