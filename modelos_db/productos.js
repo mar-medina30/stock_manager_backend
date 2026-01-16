@@ -43,7 +43,10 @@ export const traerProductoPorID = async (conexion, id_a_buscar) => {
 export const traerProductoPorCategoria = async (conexion, categoria_a_buscar) => {
     try {
         const [results] = await conexion.query(
-            "SELECT p.nombre AS producto, c.nombre AS categoria, p.activo FROM producto AS p JOIN categoria AS c ON p.categoria_id=c.id WHERE c.nombre=?", [categoria_a_buscar]
+            `SELECT p.nombre AS producto, c.nombre AS categoria, p.activo
+            FROM producto
+            AS p JOIN categoria AS c ON p.categoria_id=c.id
+            WHERE c.nombre=?`, [categoria_a_buscar]
         )
         console.log(results)
         return results
@@ -60,6 +63,7 @@ export const eliminarProducto = async (conexion, producto_id) => {
             [producto_id]
         )
         console.log("Producto dado de baja")
+        return true
     } catch (err) {
         console.log(err)
     }
