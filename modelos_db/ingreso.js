@@ -1,3 +1,19 @@
+//FUNCION PARA CREAR UN INGRESO
+
+// FUNCIÓN PARA CREAR PRODUCTO
+export const crearIngreso = async (conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta) => {
+    try {
+        const [result] = await conexion.query(
+            'INSERT INTO ingreso (id, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [null, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta]
+        );
+        console.log("Ingreso insertado con éxito")
+        return result
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const traerTodosIngresos = async (conexion) => {
     try {
         const [results] = await conexion.query(
