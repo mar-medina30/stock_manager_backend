@@ -62,13 +62,13 @@ app.get('/calcularGanancia', async (req, res) => {
 app.post('/crearCategoria', async (req, res) => {
     const { nombre } = req.body
     const categoria = await categoriadb.crearCategoria(conexion, nombre)
-    res.json({ nombre, id: categoria.insertId })
+    res.json({mensaje: "Categoría creada correctamente", nombre, id: categoria.insertId })
 })
 
 app.post('/crearEgreso', async (req, res) => {
-    const {productoId, lote, cantidad, precio_venta} = req.body
-    const egreso = await egresodb.crearEgreso(conexion, productoId, lote, cantidad, precio_venta)
-    res.json({id: egreso.insertId, productoId, lote, cantidad, precio_venta})
+    const { producto_id, lote, cantidad } = req.body;
+    const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad);
+    res.json({mensaje: "Egreso creado correctamente", id: resultado.insertId, ...req.body})
 })
 
 app.listen(port, () => {
