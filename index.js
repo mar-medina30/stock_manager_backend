@@ -46,10 +46,15 @@ app.get('/calcularGanancia', async (req, res) => {
 })
 
 app.post('/crearCategoria', async (req, res) => {
-    console.log(req.body)
     const { nombre } = req.body
     const categoria = await categoriadb.crearCategoria(conexion, nombre)
     res.json({ nombre, id: categoria.insertId })
+})
+
+app.post('/crearEgreso', async (req, res) => {
+    const {productoId, lote, cantidad, precio_venta} = req.body
+    const egreso = await egresodb.crearEgreso(conexion, productoId, lote, cantidad, precio_venta)
+    res.json({id: egreso.insertId, productoId, lote, cantidad, precio_venta})
 })
 
 app.listen(port, () => {

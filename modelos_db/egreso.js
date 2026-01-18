@@ -1,3 +1,6 @@
+import conexion_db from "./conexion_db"
+
+// CALCULAR GANANCIA ENTRE 2 FECHAS
 export const calcularGanancia = async (conexion, fecha_inicio, fecha_fin) => {
     try {
         const [result] = await conexion.query(
@@ -14,3 +17,20 @@ export const calcularGanancia = async (conexion, fecha_inicio, fecha_fin) => {
         console.log(err)
     }
 }
+
+// FUNCIÓN PARA CREAR EGRESO
+export const crearEgreso = async (conexion, productoId, lote, cantidad, precio_venta) => {
+    try {
+        const[result] = await conexion.query(
+            `
+            INSERT INTO egreso (productoId, lote, cantidad, precio_venta) VALUES (?, ?, ?, ?)
+            `, [productoId, lote, cantidad, precio_venta]
+        )
+        console.log(result)
+        return result
+    } catch(err) {
+        console.log(err)
+    }
+}
+
+// FUNCIÓN PARA MODIFICAR EGRESO
