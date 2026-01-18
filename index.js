@@ -10,6 +10,20 @@ const app = express()
 const port = 3000
 app.use(express.json());
 
+app.post('/crearIngreso', async (req, res) => {
+    console.log(req.body)
+    const { producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta } = req.body
+    const ingreso = await ingresodb.crearIngreso(conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta)
+    res.json({ ...req.body, id: ingreso.insertId })
+})
+
+app.post('/crearProducto', async (req, res) => {
+    console.log(req.body)
+    const { nombre, categoriaID, activo } = req.body
+    const producto = await productodb.crearProducto(conexion, nombre, categoriaID, activo)
+    res.json({ ...req.body, id: producto.insertId })
+})
+
 app.get('/productoPorCategoria', async (req, res) => {
     const categoria = req.query.categoria;
     const productos = await productodb.traerProductoPorCategoria(conexion, categoria)
