@@ -27,6 +27,18 @@ export const crearEgreso = async (conexion, producto_id, lote, cantidad) => {
             [producto_id, lote]
         )
 
+        // VERIFICO QUE EL LOTE EXISTA
+        if (ingreso.length === 0) {
+            throw new Error("No se encontró el lote especificado")
+        }
+
+        const stockActual = ingreso[0].cantidad
+
+        // VALIDAR SI HAY SUFICIENTE STOCK
+        if (stockActual < cantidad) {
+            throw new Error(`Stock insuficiente. Solo quedan ${stockActual} unidades disponibles`)
+        }
+
         // EXTRAIGO LOS PRECIOS CON INGRESO[0]
         const { precio_costo, precio_venta } = ingreso[0]
         // EXTRAIGO LA FECHA ACTUAL 
@@ -36,6 +48,10 @@ export const crearEgreso = async (conexion, producto_id, lote, cantidad) => {
         const [egreso] = await conexion.query(
             'INSERT INTO egreso (producto_id, fecha_egreso, lote, cantidad, precio_costo, precio_venta) VALUES (?, ?, ?, ?, ?, ?)',
             [producto_id, fecha_egreso, lote, cantidad, precio_costo, precio_venta]
+        )
+
+        await conexion.query(
+            'UPDATE ingreso SET cantidad = cantidad - ? WHERE producto_id = ? AND lote = ?', [cantidad, producto_id, lote]
         )
 
         console.log("Egreso registrado con éxito")
