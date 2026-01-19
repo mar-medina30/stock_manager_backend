@@ -7,6 +7,7 @@ import express from 'express'
 
 const conexion = await iniciardb()
 const app = express()
+// app.use(express.json())
 const port = 3000
 app.use(express.json());
 
@@ -66,9 +67,16 @@ app.post('/crearCategoria', async (req, res) => {
 })
 
 app.post('/crearEgreso', async (req, res) => {
-    const { producto_id, lote, cantidad } = req.body;
-    const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad);
-    res.json({mensaje: "Egreso creado correctamente", id: resultado.insertId, ...req.body})
+    const { producto_id, lote, cantidad } = req.body
+    const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
+    res.json({id: resultado.insertId, ...req.body})
+})
+
+app.post('/modificarProducto', async (req, res) => {
+    console.log(req.body)
+    const { id, nombre, categoria_id, activo} = req.body
+    const resultado = await productodb.modificarProducto(conexion, id, nombre, categoria_id, activo)
+    res.json({id:resultado.insertId, ...req.body})
 })
 
 app.listen(port, () => {

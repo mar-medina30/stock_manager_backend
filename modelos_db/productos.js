@@ -70,3 +70,21 @@ export const eliminarProducto = async (conexion, producto_id) => {
 }
 
 // FUNCIÓN PARA MODIFICAR UN PRODUCTOS
+export const modificarProducto = async (conexion, id, nombre, categoria_id, activo) => {
+    try {
+        // IFNULL para que si el dato llega como null, mantenga el original
+        const [result] = await conexion.query(
+            `UPDATE producto 
+             SET nombre = IFNULL(?, nombre), 
+                 categoria_id = IFNULL(?, categoria_id), 
+                 activo = IFNULL(?, activo)
+             WHERE id = ?`, 
+            [nombre || null, categoria_id || null, activo ?? null, id]
+        )
+        console.log(result)
+        return result
+    } catch (err) {
+        console.log("Error en DB:", err)
+        throw err
+    }
+}
