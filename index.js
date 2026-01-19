@@ -5,11 +5,13 @@ import * as ingresodb from "./modelos_db/ingreso.js"
 import * as egresodb from "./modelos_db/egreso.js"
 import express from 'express'
 
+import productoRoute from "./routes/productos.js"
+
 const conexion = await iniciardb()
 const app = express()
-// app.use(express.json())
 const port = 3000
-app.use(express.json());
+app.use(express.json())
+app.use("/producto", productoRoute)
 
 app.post('/crearIngreso', async (req, res) => {
     console.log(req.body)
@@ -18,40 +20,10 @@ app.post('/crearIngreso', async (req, res) => {
     res.json({ ...req.body, id: ingreso.insertId })
 })
 
-app.post('/crearProducto', async (req, res) => {
-    console.log(req.body)
-    const { nombre, categoriaID, activo } = req.body
-    const producto = await productodb.crearProducto(conexion, nombre, categoriaID, activo)
-    res.json({ ...req.body, id: producto.insertId })
-})
-
-app.get('/productoPorCategoria', async (req, res) => {
-    const categoria = req.query.categoria;
-    const productos = await productodb.traerProductoPorCategoria(conexion, categoria)
-    res.send(productos)
-})
-
-app.get('/productoPorId', async (req, res) => {
-    const id = req.query.id
-    const [producto] = await productodb.traerProductoPorID(conexion, id)
-    res.send(producto)
-})
-
 app.get('/rangoDeVencimiento', async (req, res) => {
     const { fecha_inicio, fecha_fin } = req.query
     const producto = await ingresodb.rangoVencimientos(conexion, fecha_inicio, fecha_fin)
     res.send(producto)
-})
-
-app.delete('/eliminarProducto', async (req, res) => {
-    const { id } = req.query
-    const producto = await productodb.eliminarProducto(conexion, id)
-    res.send(producto)
-})
-
-app.get('/stockPorCategoria', async (req, res) => {
-    const stock = await ingresodb.totalDeProductosPorCategoria(conexion)
-    res.send(stock)
 })
 
 app.get('/calcularGanancia', async (req, res) => {
@@ -70,12 +42,6 @@ app.post('/crearEgreso', async (req, res) => {
     const { producto_id, lote, cantidad } = req.body
     const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
     res.json({id: resultado.insertId, ...req.body})
-})
-
-app.post('/modificarProducto', async (req, res) => {
-    const { id, nombre, categoria_id, activo} = req.body
-    const resultado = await productodb.modificarProducto(conexion, id, nombre, categoria_id, activo)
-    res.json({id:resultado.insertId, ...req.body})
 })
 
 app.post('/subirPrecioProducto', async (req, res) => {
