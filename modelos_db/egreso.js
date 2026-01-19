@@ -61,4 +61,4 @@ export const crearEgreso = async (conexion, producto_id, lote, cantidad) => {
         throw err
     }
 }
-// FUNCIÓN PARA MODIFICAR EGRESO
+

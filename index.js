@@ -73,10 +73,21 @@ app.post('/crearEgreso', async (req, res) => {
 })
 
 app.post('/modificarProducto', async (req, res) => {
-    console.log(req.body)
     const { id, nombre, categoria_id, activo} = req.body
     const resultado = await productodb.modificarProducto(conexion, id, nombre, categoria_id, activo)
     res.json({id:resultado.insertId, ...req.body})
+})
+
+app.post('/subirPrecioProducto', async (req, res) => {
+    const {ids, porcentaje} = req.body
+    const resultado = await ingresodb.subirPrecioProducto(conexion, ids, porcentaje)
+    res.json({id:resultado.insertId, ...req.body})
+})
+
+app.post('/bajarPrecioProducto', async (req, res) => {
+    const {ids, porcentaje} = req.body
+    const resultado = await ingresodb.bajarPrecioProducto(conexion, ids, porcentaje)
+    res.json({id:resultado.insertId, ids_modificados: ids})
 })
 
 app.listen(port, () => {
