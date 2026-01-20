@@ -78,7 +78,7 @@ export const modificarProducto = async (conexion, id, nombre, categoria_id, acti
              SET nombre = IFNULL(?, nombre), 
                  categoria_id = IFNULL(?, categoria_id), 
                  activo = IFNULL(?, activo)
-             WHERE id = ?`, 
+             WHERE id = ?`,
             [nombre || null, categoria_id || null, activo ?? null, id]
         )
         console.log(result)

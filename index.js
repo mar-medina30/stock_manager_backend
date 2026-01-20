@@ -35,28 +35,55 @@ app.get('/calcularGanancia', async (req, res) => {
 app.post('/crearCategoria', async (req, res) => {
     const { nombre } = req.body
     const categoria = await categoriadb.crearCategoria(conexion, nombre)
-    res.json({mensaje: "Categoría creada correctamente", nombre, id: categoria.insertId })
+    res.json({ mensaje: "Categoría creada correctamente", nombre, id: categoria.insertId })
 })
 
 app.post('/crearEgreso', async (req, res) => {
     const { producto_id, lote, cantidad } = req.body
     const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
-    res.json({id: resultado.insertId, ...req.body})
+    res.json({ id: resultado.insertId, ...req.body })
+})
+
+app.post('/modificarProducto', async (req, res) => {
+    console.log(req.body)
+    const { id, nombre, categoria_id, activo } = req.body
+    const resultado = await productodb.modificarProducto(conexion, id, nombre, categoria_id, activo)
+    res.json({ id: resultado.insertId, ...req.body })
 })
 
 app.post('/subirPrecioProducto', async (req, res) => {
-    const {ids, porcentaje} = req.body
+    const { ids, porcentaje } = req.body
     const resultado = await ingresodb.subirPrecioProducto(conexion, ids, porcentaje)
-    res.json({id:resultado.insertId, ...req.body})
+    res.json({ id: resultado.insertId, ...req.body })
 })
 
 app.post('/bajarPrecioProducto', async (req, res) => {
-    const {ids, porcentaje} = req.body
+    const { ids, porcentaje } = req.body
     const resultado = await ingresodb.bajarPrecioProducto(conexion, ids, porcentaje)
-    res.json({id:resultado.insertId, ids_modificados: ids})
+    res.json({ id: resultado.insertId, ids_modificados: ids })
 })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
+app.get('/calcularProductoMasVendidoEntreFechas', async (req, res) => {
+    const { fecha_desde, fecha_hasta } = req.query
+    const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fecha_desde, fecha_hasta)
+    res.send(productoMasVendido)
+})
+
+app.patch('/modificarIngreso', async (req, res) => {
+    console.log(req.body)
+    const { id, producto_id, cantidad, fecha_ingreso } = req.body
+    const resultado = await ingresodb.modificarIngreso(conexion, id, producto_id, cantidad, fecha_ingreso)
+    res.json({ id: resultado.insertId, ...req.body })
+})
+
+app.patch('/modificarCategoria/:id', async (req, res) => {
+    console.log(req.params)
+    const { nombre } = req.body
+    const { id } = req.params
+    const resultado = await categoriadb.modificarCategoria(conexion, Number(id), nombre)
+    res.json({ id, ...req.body })
+})

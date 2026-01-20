@@ -1,6 +1,4 @@
 //FUNCION PARA CREAR UN INGRESO
-
-// FUNCIÓN PARA CREAR PRODUCTO
 export const crearIngreso = async (conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta) => {
     try {
         const [result] = await conexion.query(
@@ -11,6 +9,29 @@ export const crearIngreso = async (conexion, producto_id, fecha_ingreso, cantida
         return result
     } catch (err) {
         console.log(err)
+    }
+}
+
+//FUNCION PARA MODIFICAR UN INGRESO
+export const modificarIngreso = async (conexion, id, producto_id, cantidad, fecha_ingreso) => {
+    try {
+        const [result] = await conexion.query(
+            `UPDATE ingreso 
+             SET producto_id = ?, cantidad = ?, fecha_ingreso = ? 
+             WHERE id = ?`,
+            [producto_id, cantidad, fecha_ingreso, id]
+        );
+
+        if (result.affectedRows === 0) {
+            console.log("No se encontró ningún ingreso con ese ID.");
+        } else {
+            console.log("Ingreso actualizado con éxito");
+        }
+
+        return result;
+    } catch (err) {
+        console.error("Error al modificar el ingreso:", err);
+        throw err;
     }
 }
 

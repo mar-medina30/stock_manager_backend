@@ -13,10 +13,36 @@ export const calcularGanancia = async (conexion, fecha_inicio, fecha_fin) => {
         )
         console.log(result)
         return result
-    } catch(err) {
+    } catch (err) {
         console.log(err)
     }
 }
+
+// CALCULAR PRODUCTO MÀS VENDIDO ENTRE UN PERIODO DE FECHAS
+export const calcularProductoMasVendidoEntreFechas = async (conexion, fecha_desde, fecha_hasta) => {
+    try {
+        const [result] = await conexion.query(
+            `
+            SELECT p.nombre as Producto, SUM(e.cantidad) as TotalVendido
+            FROM egreso e
+            JOIN producto as p ON e.producto_id = p.id
+            WHERE e.fecha_egreso BETWEEN ? AND ?
+            GROUP BY p.id, p.nombre
+            ORDER BY TotalVendido DESC
+            LIMIT 1
+            `, [fecha_desde, fecha_hasta]
+        )
+        if (result.length === 0) {
+            return { mensaje: "No se registraron ventas en el periodo seleccionado" };
+        }
+        return result[0];
+
+    } catch (err) {
+        console.error("Error en la consulta:", err);
+        return { error: "Hubo un problema al consultar los datos" };
+    }
+}
+
 
 // FUNCIÓN PARA CREAR EGRESO
 export const crearEgreso = async (conexion, producto_id, lote, cantidad) => {
