@@ -2,6 +2,8 @@ import express from 'express'
 import * as productodb from "../modelos_db/productos.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { categoriaSchema, productoSchema } from '../validaciones/productos.js'
+import { idSchema } from '../validaciones/general'
+import { validador } from '../middleware/validador'
 
 const conexion = await iniciardb()
 const router = express.Router()
@@ -13,9 +15,9 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.post('/crearProducto', async (req, res) => {
+router.post('/crearProducto', validador(productoSchema), async (req, res) => {
     try{
-        await productoSchema.validateAsync(req.body)
+        //await productoSchema.validateAsync(req.body)
         console.log(req.body)
         const { nombre, categoriaID, activo } = req.body
         const producto = await productodb.crearProducto(conexion, nombre, categoriaID, activo)
@@ -27,26 +29,31 @@ router.post('/crearProducto', async (req, res) => {
 })
 
 router.get('/productoPorCategoria', async (req, res) => {
-    try {
-        await categoriaSchema.validateAsync(req.query)
         const categoriaID = req.query.categoria_id
-        const productos = await productodb.traerProductoPorCategoria(conexion, categoria_id)
+        const productos = await productodb.traerProductoPorCategoria(conexion, categoriaID)
         res.send(productos)
+})
+
+router.get('/productoPorId', async (req, res) => {
+    try {
+        await idSchema.validateAsync(req.query)
+        const id = req.query.id
+        const [producto] = await productodb.traerProductoPorID(conexion, id)
+        res.send(producto)
     } catch(err) {
         res.status(400).send(err.details)
     }
 })
 
-router.get('/productoPorId', async (req, res) => {
-    const id = req.query.id
-    const [producto] = await productodb.traerProductoPorID(conexion, id)
-    res.send(producto)
-})
-
 router.delete('/eliminarProducto', async (req, res) => {
-    const { id } = req.query
-    const producto = await productodb.eliminarProducto(conexion, id)
-    res.send(producto)
+    try {
+        await idSchema.validateAsync(req.query)
+        const { id } = req.query
+        const producto = await productodb.eliminarProducto(conexion, id)
+        res.send(producto)
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
 router.post('/modificarProducto', async (req, res) => {
