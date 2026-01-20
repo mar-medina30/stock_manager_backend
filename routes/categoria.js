@@ -24,3 +24,5 @@ router.patch('/modificarCategoria/:id', async (req, res) => {
     const resultado = await categoriadb.modificarCategoria(conexion, Number(id), nombre)
     res.json({ id, ...req.body })
 })
+
+export default router

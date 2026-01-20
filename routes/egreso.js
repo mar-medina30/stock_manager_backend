@@ -32,3 +32,5 @@ router.get('/calcularProductoMasVendidoEntreFechas', async (req, res) => {
     const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fecha_desde, fecha_hasta)
     res.send(productoMasVendido)
 })
+
+export default router

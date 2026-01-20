@@ -42,3 +42,5 @@ router.patch('/modificarIngreso', async (req, res) => {
     const resultado = await ingresodb.modificarIngreso(conexion, id, producto_id, cantidad, fecha_ingreso)
     res.json({ id: resultado.insertId, ...req.body })
 })
+
+export default router
