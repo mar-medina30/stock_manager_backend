@@ -23,10 +23,6 @@ router.post('/crearEgreso', async (req, res) => {
     res.json({ id: resultado.insertId, ...req.body })
 })
 
-router.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
-
 router.get('/calcularProductoMasVendidoEntreFechas', async (req, res) => {
     const { fecha_desde, fecha_hasta } = req.query
     const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fecha_desde, fecha_hasta)

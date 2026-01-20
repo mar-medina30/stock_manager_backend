@@ -46,7 +46,7 @@ export const traerProductoPorCategoria = async (conexion, categoria_a_buscar) =>
             `SELECT p.nombre AS producto, c.nombre AS categoria, p.activo
             FROM producto
             AS p JOIN categoria AS c ON p.categoria_id=c.id
-            WHERE c.nombre=?`, [categoria_a_buscar]
+            WHERE c.id=?`, [categoria_a_buscar]
         )
         console.log(results)
         return results
