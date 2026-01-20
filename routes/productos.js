@@ -1,6 +1,8 @@
 import express from 'express'
 import * as productodb from "../modelos_db/productos.js"
 import iniciardb from "../modelos_db/conexion_db.js"
+import { categoriaSchema, productoSchema } from '../validaciones/productos.js'
+
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -12,17 +14,27 @@ const timeLog = (req, res, next) => {
 //router.use(timeLog)
 
 router.post('/crearProducto', async (req, res) => {
-    console.log(req.body)
-    const { nombre, categoriaID, activo } = req.body
-    const producto = await productodb.crearProducto(conexion, nombre, categoriaID, activo)
-    console.log(producto)
-    res.json({ ...req.body, id: producto.insertId })
+    try{
+        await productoSchema.validateAsync(req.body)
+        console.log(req.body)
+        const { nombre, categoriaID, activo } = req.body
+        const producto = await productodb.crearProducto(conexion, nombre, categoriaID, activo)
+        console.log(producto)
+        res.json({ ...req.body, id: producto.insertId })
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
 router.get('/productoPorCategoria', async (req, res) => {
-    const categoria = req.query.categoria;
-    const productos = await productodb.traerProductoPorCategoria(conexion, categoria)
-    res.send(productos)
+    try {
+        await categoriaSchema.validateAsync(req.query)
+        const { categoria_id } = req.query
+        const productos = await productodb.traerProductoPorCategoria(conexion, categoria_id)
+        res.send(productos)
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
 router.get('/productoPorId', async (req, res) => {
