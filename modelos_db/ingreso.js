@@ -77,6 +77,57 @@ export const totalDeProductosPorCategoria = async (conexion) => {
     }
 }
 
+// FUNCIÓN PARA CAMBIAR LOS PRECIOS DE LOS PRODUCTOS (CON PORCENTAJE)
+export const subirPrecioProducto = async (conexion, ids, porcentaje) => {
+    try {
 
-// FUNCIÓN PARA CREAR UN INGRESO
+        const valorPorcentaje = parseFloat(porcentaje ?? 0)
 
+        // valido que ids sea un array o que no esté vacío
+        if (!Array.isArray(ids) || ids.length === 0) {
+            throw new Error("No se han igresado ids de productos")
+        }
+
+        const porcentaje_calculado = 1 + (valorPorcentaje/100)
+
+        const [result] = await conexion.query (
+            `
+            UPDATE ingreso
+            SET precio_venta = precio_venta * ?
+            WHERE id IN (?)
+            `, [porcentaje_calculado, ids]
+        )
+        return result
+    } catch(err) {
+        console.log(err)
+    }
+}
+
+// FUNCIÓN PARA CAMBIAR LOS PRECIOS DE LOS PRODUCTOS (CON PORCENTAJE)
+export const bajarPrecioProducto = async (conexion, ids, porcentaje) => {
+    try {
+
+        const valorPorcentaje = parseFloat(porcentaje ?? 0)
+         // Si el porcentaje no es un número
+        if (isNaN(valorPorcentaje)) {
+            throw new Error("El porcentaje no es un número válido")
+        }
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            throw new Error("Debes proporcionar un array de IDs");
+        }
+
+        const porcentaje_calculado = 1 - (valorPorcentaje/100)
+
+        const [result] = await conexion.query (
+            `
+            UPDATE ingreso
+            SET precio_venta = precio_venta * ?
+            WHERE id IN (?)
+            `, [porcentaje_calculado, ids]
+        )
+        return result
+    } catch(err) {
+        console.log(err)
+    }
+}
