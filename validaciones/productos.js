@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { idSchema } from './general'
+import { idSchema } from './general.js'
 
 export const productoSchema = Joi.object({
     nombre: Joi.string()
@@ -23,9 +23,9 @@ export const productoOpcionales = Joi.object({
         .min(1),
 
     nombre: Joi.string()
-    .alphanum()
-    .min(3)
-    .max(30),
+        .alphanum()
+        .min(3)
+        .max(30),
 
     categoriaID: Joi.number()
         .integer()

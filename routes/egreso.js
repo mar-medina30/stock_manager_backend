@@ -17,6 +17,12 @@ router.get('/calcularGanancia', async (req, res) => {
     res.send(ganancia)
 })
 
+router.get('/calcularCierreDeCaja', async (req, res) => {
+    const { fecha_inicio, fecha_fin } = req.query
+    const cierreDeCaja = await egresodb.calcularCierreDeCaja(conexion, fecha_inicio, fecha_fin)
+    res.send(cierreDeCaja)
+})
+
 router.post('/crearEgreso', async (req, res) => {
     const { producto_id, lote, cantidad } = req.body
     const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
