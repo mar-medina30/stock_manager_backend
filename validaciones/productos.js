@@ -1,11 +1,10 @@
 import Joi from 'joi'
-import { idSchema } from './general'
 
 export const productoSchema = Joi.object({
     nombre: Joi.string()
         .alphanum()
         .min(3)
-        .max(30)
+        .max(50)
         .required(),
 
     categoriaID: Joi.number()
@@ -20,17 +19,21 @@ export const productoSchema = Joi.object({
 export const productoOpcionales = Joi.object({
     id: Joi.number()
         .integer()
-        .min(1),
+        .min(1)
+        .required(),
 
     nombre: Joi.string()
-    .alphanum()
-    .min(3)
-    .max(30),
+        .alphanum()
+        .min(3)
+        .max(50),
 
     categoriaID: Joi.number()
         .integer()
         .min(1),
 
     activo: Joi.boolean()
-
+})
+.or('nombre', 'categoriaID', 'activo')
+.messages({
+    'object.missing': 'Debes ingresar al menos un campo para modificar (nombre, categoriaID o activo).'
 })

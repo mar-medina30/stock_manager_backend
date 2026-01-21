@@ -1,6 +1,9 @@
 import express from 'express'
 import * as egresodb from "../modelos_db/egreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
+import { fechaScheme } from '../validaciones/general'
+import { validador } from '../middleware/validador'
+import { egresoSheme } from '../validaciones/egreso.js'
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -11,22 +14,34 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.get('/calcularGanancia', async (req, res) => {
-    const { fecha_inicio, fecha_fin } = req.query
-    const ganancia = await egresodb.calcularGanancia(conexion, fecha_inicio, fecha_fin)
-    res.send(ganancia)
+router.get('/calcularGanancia', validador(fechaScheme, 'query'), async (req, res) => {
+    try {
+        const { fechaDesde, fechaHasta } = req.query
+        const ganancia = await egresodb.calcularGanancia(conexion, fechaDesde, fechaHasta)
+        res.send(ganancia)
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
-router.post('/crearEgreso', async (req, res) => {
-    const { producto_id, lote, cantidad } = req.body
-    const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
-    res.json({ id: resultado.insertId, ...req.body })
+router.post('/crearEgreso', validador(egresoSheme), async (req, res) => {
+    try {
+        const { producto_id, lote, cantidad } = req.body
+        const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
+        res.json({ id: resultado.insertId, ...req.body })
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
-router.get('/calcularProductoMasVendidoEntreFechas', async (req, res) => {
-    const { fecha_desde, fecha_hasta } = req.query
-    const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fecha_desde, fecha_hasta)
-    res.send(productoMasVendido)
+router.get('/calcularProductoMasVendidoEntreFechas', validador(fechaScheme, 'query'), async (req, res) => {
+    try {
+        const { fechaDesde, fechaHasta } = req.query
+        const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fechaDesde, fechaHasta)
+        res.send(productoMasVendido)
+    } catch(err) {
+        res.status(400).send(err.details)
+    }
 })
 
 export default router
