@@ -1,8 +1,8 @@
 import express from 'express'
 import * as egresodb from "../modelos_db/egreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
-import { fechaScheme } from '../validaciones/general'
-import { validador } from '../middleware/validador'
+import { fechaScheme } from '../validaciones/general.js'
+import { validador } from '../middleware/validador.js'
 import { egresoSheme } from '../validaciones/egreso.js'
 const conexion = await iniciardb()
 const router = express.Router()
@@ -32,6 +32,18 @@ router.post('/crearEgreso', validador(egresoSheme), async (req, res) => {
     } catch(err) {
         res.status(400).send(err.details)
     }
+})
+
+router.get('/calcularCierreDeCaja', async (req, res) => {
+    const { fecha_inicio, fecha_fin } = req.query
+    const cierreDeCaja = await egresodb.calcularCierreDeCaja(conexion, fecha_inicio, fecha_fin)
+    res.send(cierreDeCaja)
+})
+
+router.post('/crearEgreso', async (req, res) => {
+    const { producto_id, lote, cantidad } = req.body
+    const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
+    res.json({ id: resultado.insertId, ...req.body })
 })
 
 router.get('/calcularProductoMasVendidoEntreFechas', validador(fechaScheme, 'query'), async (req, res) => {
