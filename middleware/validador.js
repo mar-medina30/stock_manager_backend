@@ -1,5 +1,6 @@
 export const validador = (schema, property = 'body') => {
   return (req, res, next) => {
+    console.log(req[property])
     const { error, value } = schema.validate(req[property], {
       abortEarly: false
     });
@@ -14,7 +15,7 @@ export const validador = (schema, property = 'body') => {
       });
     }
 
-    req[property] = value; // datos sanitizados
+    req.bodyValidado = value; // datos sanitizados
     next();
   };
 };
