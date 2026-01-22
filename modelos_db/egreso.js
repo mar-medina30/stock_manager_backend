@@ -18,6 +18,24 @@ export const calcularGanancia = async (conexion, fecha_inicio, fecha_fin) => {
     }
 }
 
+// CALCULAR CIERRE DE CAJA
+export const calcularCierreDeCaja = async (conexion, fecha_inicio, fecha_fin) => {
+    try {
+        const [result] = await conexion.query(
+            ` select p.nombre AS PRODUCTO, e.fecha_egreso AS FECHA, e.cantidad AS CANTIDAD, e.precio_venta AS "VALOR POR UNIDAD", (e.cantidad * e.precio_venta) as TOTAL, SUM(e.cantidad * e.precio_venta) OVER() as "CIERRE DE CAJA"
+                from egreso as e
+                join producto as p on e.producto_id = p.id
+                where fecha_egreso between ? and ?
+                ORDER BY e.fecha_egreso asc
+            `, [fecha_inicio, fecha_fin]
+        )
+        console.log(result)
+        return result
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 // CALCULAR PRODUCTO MÀS VENDIDO ENTRE UN PERIODO DE FECHAS
 export const calcularProductoMasVendidoEntreFechas = async (conexion, fecha_desde, fecha_hasta) => {
     try {

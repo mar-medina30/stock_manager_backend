@@ -19,8 +19,9 @@ router.get('/calcularGanancia', async (req, res) => {
 
 router.get('/calcularCierreDeCaja', async (req, res) => {
     const { fecha_inicio, fecha_fin } = req.query
-    const cierreDeCaja = await egresodb.calcularCierreDeCaja(conexion, fecha_inicio, fecha_fin)
-    res.send(cierreDeCaja)
+    console.log(egresodb.calcularGanancia)
+    const ganancia = await egresodb.calcularCierreDeCaja(conexion, fecha_inicio, fecha_fin)
+    res.send(ganancia)
 })
 
 router.post('/crearEgreso', async (req, res) => {
