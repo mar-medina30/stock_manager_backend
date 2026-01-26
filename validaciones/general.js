@@ -7,17 +7,27 @@ export const idSchema = Joi.object({
     .required()
 })
 
-export const fechaScheme = Joi.object({
+export const fechaSchema = Joi.object({
     fechaDesde: Joi.date()
         .min('2020-01-01')
         .max('2030-01-01')
-        //.iso()
+        .iso()
         .required(),
     
     fechaHasta: Joi.date()
         .min('2020-01-01')
         .max('2030-01-01')
-        //.iso()
+        .iso()
         .greater(Joi.ref('fechaDesde'))
         .required()
+})
+
+export const precioValidacion = Joi.number()
+    .positive()
+    .precision(2)
+    .required()
+    .messages({
+        'number.base': 'El precio debe ser un número',
+        'number.positive': 'El precio debe ser mayor a 0',
+        'any.required': 'Este campo es obligatorio'
 })

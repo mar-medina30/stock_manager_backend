@@ -14,7 +14,7 @@ const timeLog = (req, res, next) => {
 router.post('/crearIngreso', async (req, res) => {
     console.log(req.body)
     const { producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta } = req.body
-    const ingreso = await ingresodb.crearIngreso(conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta)
+    const [ingreso] = await ingresodb.crearIngreso(conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta)
     res.json({ ...req.body, id: ingreso.insertId })
 })
 

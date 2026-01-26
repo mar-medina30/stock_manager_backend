@@ -31,8 +31,8 @@ router.post('/crearProducto', validador(productoSchema), async (req, res) => {
 router.get('/productoPorCategoria', validador(idSchema, 'query'), async (req, res) => {
     try {
         //await categoriaSchema.validateAsync(req.query)
-        const categoriaID = req.query.categoria_id
-        const productos = await productodb.traerProductoPorCategoria(conexion, categoriaID)
+        const id = req.query.id
+        const productos = await productodb.traerProductoPorCategoria(conexion, id)
         res.send(productos)
     } catch (err) {
         res.status(400).send(err.details)
