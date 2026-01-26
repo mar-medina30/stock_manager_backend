@@ -5,6 +5,7 @@ import productoRoute from "./routes/productos.js"
 import egresoRoute from "./routes/egreso.js"
 import categoriaRoute from "./routes/categoria.js"
 import ingresoRoute from "./routes/ingresos.js"
+import usuarioRoute from "./routes/usuarios.js"
 
 const conexion = await iniciardb()
 const app = express()
@@ -14,6 +15,7 @@ app.use("/producto", productoRoute)
 app.use("/egreso", egresoRoute)
 app.use("/categoria", categoriaRoute)
 app.use("/ingreso", ingresoRoute)
+app.use("/usuario", usuarioRoute)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
