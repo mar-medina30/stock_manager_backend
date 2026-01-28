@@ -1,0 +1,4 @@
+"id";"nombre";"email";"password_hash"
+1;"Admin";"admin@gmail.com";"$2b$10$qvCVnWTDfdy5rvCFLPsFHew9C.4vib.vV7H5B2wUk.4PLlhvIWT1a"
+2;"Cliente1";"cliente1@gmail.com";"$2b$10$.yWaiCDGDSKbwevmHMbE8.jWQJPH7jNYtkPYhto71c19/E1AlC3D2"
+3;"Empleado1";"empleado1@gmail.com";"$2b$10$fn15CE5IEbOUKKD1wqT9rOHZH8A9W0xH4vFFLUwxIsH5QggUKBqY6"

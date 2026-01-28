@@ -29,3 +29,4 @@ export const obtenerUsuarioPorEmail = async (conexion, email) => {
         throw err
     }
 }
+

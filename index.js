@@ -11,7 +11,6 @@ import categoriaRoute from "./routes/categoria.js"
 import ingresoRoute from "./routes/ingresos.js"
 import usuarioRoute from "./routes/usuarios.js"
 
-const conexion = await iniciardb()
 const app = express()
 const port = process.env.PORT || 3000
 app.use(express.json())
