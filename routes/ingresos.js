@@ -2,7 +2,7 @@ import express from 'express'
 import * as ingresodb from "../modelos_db/ingreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { validador } from '../middleware/validador.js'
-import { ingresoSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema } from '../validaciones/ingresos.js'
+import { ingresoSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema, stockPorCategoriaSchema } from '../validaciones/ingresos.js'
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -45,7 +45,7 @@ router.patch('/modificarIngreso', validador(modificarIngresoSchema), async (req,
     res.json({ id: resultado.insertId, ...req.body })
 })
 
-router.get('/stockPorCategoria', async (req, res) => {
+router.get('/stockPorCategoria', validador(stockPorCategoriaSchema, 'query'), async (req, res) => {
     const stock = await ingresodb.totalDeProductosPorCategoria(conexion)
     res.send(stock)
 })

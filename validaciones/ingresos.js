@@ -79,3 +79,9 @@ export const modificarIngresoSchema = Joi.object({
     .messages({
         'object.missing': 'Debes ingresar al menos un campo para modificar (producto_id, cantidad o fecha_ingreso).'
     })
+
+export const stockPorCategoriaSchema = Joi.object({})
+    .unknown(false)
+    .messages({
+        'object.unknown': 'Este endpoint no acepta parámetros'
+    })
