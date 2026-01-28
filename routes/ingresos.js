@@ -2,7 +2,7 @@ import express from 'express'
 import * as ingresodb from "../modelos_db/ingreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { validador } from '../middleware/validador.js'
-import { ingresoSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema, stockPorCategoriaSchema } from '../validaciones/ingresos.js'
+import { ingresoCrearSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema, stockPorCategoriaSchema } from '../validaciones/ingresos.js'
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -13,7 +13,7 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.post('/crearIngreso', validador(ingresoSchema), async (req, res) => {
+router.post('/crearIngreso', validador(ingresoCrearSchema), async (req, res) => {
     console.log(req.body)
     const { producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta } = req.body
     const [ingreso] = await ingresodb.crearIngreso(conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta)

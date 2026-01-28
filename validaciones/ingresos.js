@@ -29,6 +29,8 @@ export const ingresoSchema = Joi.object({
     precio_venta: precioValidacion
 })
 
+export const ingresoCrearSchema = ingresoSchema.fork(['precio_costo', 'precio_venta'], (schema) => schema.forbidden())
+
 export const rangoVencimientosSchema = Joi.object({
     fecha_inicio: Joi.date()
         .iso()
