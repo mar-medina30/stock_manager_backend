@@ -16,7 +16,7 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.post('/crearProducto', validarToken,validador(productoSchema), async (req, res) => {
+router.post('/crearProducto', validador(productoSchema), async (req, res) => {
     try {
         //await productoSchema.validateAsync(req.body)
         console.log(req.body)
