@@ -4,6 +4,7 @@ import iniciardb from "../modelos_db/conexion_db.js"
 import { productoSchema, productoOpcionales } from '../validaciones/productos.js'
 import { idSchema } from '../validaciones/general.js'
 import { validador } from '../middleware/validador.js'
+import { validarToken } from '../middleware/validarToken.js'
 
 const conexion = await iniciardb()
 const router = express.Router()
@@ -15,7 +16,7 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.post('/crearProducto', validador(productoSchema), async (req, res) => {
+router.post('/crearProducto', validarToken,validador(productoSchema), async (req, res) => {
     try {
         //await productoSchema.validateAsync(req.body)
         console.log(req.body)

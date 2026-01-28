@@ -4,6 +4,7 @@ import iniciardb from "../modelos_db/conexion_db.js"
 import { usuarioCrearSchema, usuarioLoginSchema } from '../validaciones/usuarios.js'
 import { validador } from '../middleware/validador.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const conexion = await iniciardb()
 const router = express.Router()
@@ -56,12 +57,24 @@ router.post('/login', validador(usuarioLoginSchema), async (req, res) => {
             return res.status(401).json({ error: 'Email o contraseña incorrectos' })
         }
 
+        // Crear el access token
+        const accessToken = jwt.sign(
+            {
+                id: usuario.id,
+                email: usuario.email,
+                nombre: usuario.nombre
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        )
+
         // Login exitoso
         res.json({
             mensaje: 'Login exitoso',
             usuarioID: usuario.id,
             nombre: usuario.nombre,
-            email: usuario.email
+            email: usuario.email,
+            accessToken
         })
     } catch (err) {
         console.error(err)
