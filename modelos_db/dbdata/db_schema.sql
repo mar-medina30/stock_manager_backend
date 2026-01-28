@@ -175,3 +175,6 @@ CREATE TABLE rol_usuario (
         FOREIGN KEY (rol_id) REFERENCES rol(id) 
         ON DELETE CASCADE
 );
+
+ALTER TABLE rol_usuario
+ADD UNIQUE KEY `unique_usuario_rol` (`usuario_id`, `rol_id`);

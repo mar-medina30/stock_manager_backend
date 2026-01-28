@@ -70,3 +70,7 @@ INSERT INTO rol (nombre) VALUES
 ('admin'), 
 ('cliente'), 
 ('empleado');
+
+INSERT INTO rol_usuario (usuario_id, rol_id) VALUES (1, 1);
+INSERT INTO rol_usuario (usuario_id, rol_id) VALUES (2, 2);
+INSERT INTO rol_usuario (usuario_id, rol_id) VALUES (3, 3);
