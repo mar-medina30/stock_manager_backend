@@ -10,7 +10,9 @@ export const usuarioCrearSchema = Joi.object({
         .required(),
     password: Joi.string()
         .min(6)
-        .required()
+        .required(),
+    activo: Joi.boolean()
+        .default(true)
 })
 
 export const usuarioLoginSchema = Joi.object({

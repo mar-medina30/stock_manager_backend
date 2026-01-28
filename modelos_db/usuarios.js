@@ -1,11 +1,11 @@
 import conexion_db from "./conexion_db.js"
 
 // FUNCIÓN PARA CREAR UN NUEVO USUARIO
-export const crearUsuario = async (conexion, nombre, email, password_hash) => {
+export const crearUsuario = async (conexion, nombre, email, password_hash, activo = true) => {
     try {
         const [result] = await conexion.query(
-            'INSERT INTO usuario (id, nombre, email, password_hash) VALUES (?, ?, ?, ?)',
-            [null, nombre, email, password_hash]
+            'INSERT INTO usuario (id, nombre, email, password_hash, activo) VALUES (?, ?, ?, ?, ?)',
+            [null, nombre, email, password_hash, activo]
         )
         console.log("Usuario insertado con éxito")
         return result

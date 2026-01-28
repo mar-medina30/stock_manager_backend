@@ -11,7 +11,7 @@ const router = express.Router()
 // RUTA PARA CREAR UN NUEVO USUARIO
 router.post('/crear', validador(usuarioCrearSchema), async (req, res) => {
     try {
-        const { nombre, email, password } = req.body
+        const { nombre, email, password, activo = true } = req.body
 
         // Verificar si el usuario ya existe
         const usuarioExistente = await usuariodb.obtenerUsuarioPorEmail(conexion, email)
@@ -24,13 +24,14 @@ router.post('/crear', validador(usuarioCrearSchema), async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt)
 
         // Crear el usuario
-        const usuario = await usuariodb.crearUsuario(conexion, nombre, email, passwordHash)
+        const usuario = await usuariodb.crearUsuario(conexion, nombre, email, passwordHash, activo)
 
         res.json({
             mensaje: 'Usuario creado exitosamente',
             usuarioID: usuario.insertId,
             nombre,
-            email
+            email,
+            activo
         })
     } catch (err) {
         console.error(err)
