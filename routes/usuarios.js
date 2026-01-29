@@ -57,12 +57,27 @@ router.post('/login', validador(usuarioLoginSchema), async (req, res) => {
             return res.status(401).json({ error: 'Email o contraseña incorrectos' })
         }
 
+        // Obtengo los roles para guardarlos en el token
+        const queryRoles = `
+            SELECT r.nombre 
+            FROM rol r
+            JOIN rol_usuario ru ON r.id = ru.rol_id
+            WHERE ru.usuario_id = ?
+        `;
+        
+        const [rolesDb] = await conexion.query(queryRoles, [usuario.id])
+        
+        // 'rolesDb' será algo como: [ { nombre: 'cliente' }, { nombre: 'empelado' } ]
+        // Lo convertimos a un array simple: ['cliente', 'empleado']
+        const listaRoles = rolesDb.map(row => row.nombre)
+
         // Crear el access token
         const accessToken = jwt.sign(
             {
                 id: usuario.id,
                 email: usuario.email,
-                nombre: usuario.nombre
+                nombre: usuario.nombre,
+                roles: listaRoles
             },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }

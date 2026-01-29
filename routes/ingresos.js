@@ -3,6 +3,8 @@ import * as ingresodb from "../modelos_db/ingreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { validador } from '../middleware/validador.js'
 import { ingresoCrearSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema, stockPorCategoriaSchema } from '../validaciones/ingresos.js'
+import validadorRol from '../middleware/validadorRol.js'
+import { validarToken } from '../middleware/validarToken.js'
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -20,7 +22,7 @@ router.post('/crearIngreso', validador(ingresoCrearSchema), async (req, res) => 
     res.json({ ...req.body, id: ingreso.insertId })
 })
 
-router.get('/rangoDeVencimiento', validador(rangoVencimientosSchema, 'query'), async (req, res) => {
+router.get('/rangoDeVencimiento', validadorRol('cliente', 'empleado'), validador(rangoVencimientosSchema, 'query'), async (req, res) => {
     const { fecha_inicio, fecha_fin } = req.query
     const producto = await ingresodb.rangoVencimientos(conexion, fecha_inicio, fecha_fin)
     res.send(producto)
@@ -38,7 +40,7 @@ router.post('/bajarPrecioProducto', validador(precioProductoSchema), async (req,
     res.json({ id: resultado.insertId, ids_modificados: ids })
 })
 
-router.patch('/modificarIngreso', validador(modificarIngresoSchema), async (req, res) => {
+router.patch('/modificarIngreso', validadorRol('admin'), validador(modificarIngresoSchema), async (req, res) => {
     console.log(req.body)
     const { id, producto_id, cantidad, fecha_ingreso } = req.body
     const resultado = await ingresodb.modificarIngreso(conexion, id, producto_id, cantidad, fecha_ingreso)
