@@ -5,6 +5,7 @@ import { productoSchema, productoOpcionales } from '../validaciones/productos.js
 import { idSchema } from '../validaciones/general.js'
 import { validador } from '../middleware/validador.js'
 import { validarToken } from '../middleware/validarToken.js'
+import validadorRol from '../middleware/validadorRol.js'
 
 const conexion = await iniciardb()
 const router = express.Router()
@@ -16,7 +17,7 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.post('/crearProducto', validador(productoSchema), async (req, res) => {
+router.post('/crearProducto', validadorRol('admin', 'cliente', 'empleado'), validador(productoSchema), async (req, res) => {
     try {
         //await productoSchema.validateAsync(req.body)
         console.log(req.body)
@@ -29,7 +30,7 @@ router.post('/crearProducto', validador(productoSchema), async (req, res) => {
     }
 })
 
-router.get('/productoPorCategoria', validador(idSchema, 'query'), async (req, res) => {
+router.get('/productoPorCategoria', validadorRol('admin', 'cliente', 'empleado'), validador(idSchema, 'query'), async (req, res) => {
     try {
         //await categoriaSchema.validateAsync(req.query)
         const id = req.query.id
@@ -40,7 +41,7 @@ router.get('/productoPorCategoria', validador(idSchema, 'query'), async (req, re
     }
 })
 
-router.get('/productoPorId', validador(idSchema, 'query'), async (req, res) => {
+router.get('/productoPorId', validadorRol('admin', 'cliente', 'empleado'), validador(idSchema, 'query'), async (req, res) => {
     try {
         //await idSchema.validateAsync(req.query)
         const id = req.query.id
@@ -51,7 +52,7 @@ router.get('/productoPorId', validador(idSchema, 'query'), async (req, res) => {
     }
 })
 
-router.delete('/eliminarProducto', validador(idSchema, 'query'), async (req, res) => {
+router.delete('/eliminarProducto', validadorRol('admin', 'cliente'), validador(idSchema, 'query'), async (req, res) => {
     try {
         //await idSchema.validateAsync(req.query)
         const { id } = req.query
@@ -62,7 +63,7 @@ router.delete('/eliminarProducto', validador(idSchema, 'query'), async (req, res
     }
 })
 
-router.post('/modificarProducto', validador(productoOpcionales), async (req, res) => {
+router.post('/modificarProducto', validadorRol('admin', 'cliente', 'empleado'), validador(productoOpcionales), async (req, res) => {
     //await productoConId.validateAsync(req.body)
     const { id, nombre, categoriaID, activo } = req.body
     const resultado = await productodb.modificarProducto(conexion, id, nombre, categoriaID, activo)

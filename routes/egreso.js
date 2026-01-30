@@ -4,6 +4,7 @@ import iniciardb from "../modelos_db/conexion_db.js"
 import { fechaSchema } from '../validaciones/general.js'
 import { validador } from '../middleware/validador.js'
 import { egresoLoteCantidadProductoIdSchema } from '../validaciones/egreso.js'
+import validadorRol from '../middleware/validadorRol.js'
 const conexion = await iniciardb()
 const router = express.Router()
 
@@ -14,7 +15,7 @@ const timeLog = (req, res, next) => {
 }
 //router.use(timeLog)
 
-router.get('/calcularGanancia', validador(fechaSchema, 'query'), async (req, res) => {
+router.get('/calcularGanancia', validadorRol('admin', 'cliente', 'empleado'), validador(fechaSchema, 'query'), async (req, res) => {
     try {
         const { fechaDesde, fechaHasta } = req.query
         const ganancia = await egresodb.calcularGanancia(conexion, fechaDesde, fechaHasta)
@@ -24,7 +25,7 @@ router.get('/calcularGanancia', validador(fechaSchema, 'query'), async (req, res
     }
 })
 
-router.post('/crearEgreso', validador(egresoLoteCantidadProductoIdSchema), async (req, res) => {
+router.post('/crearEgreso', validadorRol('admin', 'cliente', 'empleado'), validador(egresoLoteCantidadProductoIdSchema), async (req, res) => {
     try {
         const { producto_id, lote, cantidad } = req.body
         const resultado = await egresodb.crearEgreso(conexion, producto_id, lote, cantidad)
@@ -34,7 +35,7 @@ router.post('/crearEgreso', validador(egresoLoteCantidadProductoIdSchema), async
     }
 })
 
-router.get('/calcularCierreDeCaja', validador(fechaSchema, 'query'), async (req, res) => {
+router.get('/calcularCierreDeCaja', validadorRol('admin', 'cliente', 'empleado'), validador(fechaSchema, 'query'), async (req, res) => {
     try {
         const { fechaDesde, fechaHasta } = req.query
         const cierreDeCaja = await egresodb.calcularCierreDeCaja(conexion, fechaDesde, fechaHasta)
@@ -44,7 +45,7 @@ router.get('/calcularCierreDeCaja', validador(fechaSchema, 'query'), async (req,
     }
 })
 
-router.get('/calcularProductoMasVendidoEntreFechas', validador(fechaSchema, 'query'), async (req, res) => {
+router.get('/calcularProductoMasVendidoEntreFechas', validadorRol('admin', 'cliente', 'empleado'), validador(fechaSchema, 'query'), async (req, res) => {
     try {
         const { fechaDesde, fechaHasta } = req.query
         const productoMasVendido = await egresodb.calcularProductoMasVendidoEntreFechas(conexion, fechaDesde, fechaHasta)

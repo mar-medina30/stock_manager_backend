@@ -25,7 +25,7 @@ export const validadorRol = (...rolesPermitidos) => {
 			}
 
 			const permitido = usuarioRoles.some(r => roles.includes(r))
-
+            
 			if (!permitido) {
 				return res.status(403).json({ error: 'Acceso denegado. Rol insuficiente' })
 			}

@@ -5,12 +5,13 @@ import { usuarioCrearSchema, usuarioLoginSchema } from '../validaciones/usuarios
 import { validador } from '../middleware/validador.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import validadorRol from '../middleware/validadorRol.js'
 
 const conexion = await iniciardb()
 const router = express.Router()
 
 // RUTA PARA CREAR UN NUEVO USUARIO
-router.post('/crear', validador(usuarioCrearSchema), async (req, res) => {
+router.post('/crear', validadorRol('admin', 'cliente', 'empleado'), validador(usuarioCrearSchema), async (req, res) => {
     try {
         const { nombre, email, password, activo = true } = req.body
 
