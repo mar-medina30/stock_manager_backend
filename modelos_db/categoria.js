@@ -1,12 +1,12 @@
-export const traerTodasCategorias = async (conexion) => {
-  try {
-    const [results, fields] = await conexion.query(
-      'SELECT * FROM `categoria`'
-    )
+import { paginar } from "./paginacion.js";
 
-    console.log(results)
+export const traerTodasCategorias = async (conexion, page = 1, limit = 15) => {
+  try {
+    const result = await paginar(conexion, 'categoria', page, limit, '*');
+    console.log(result.data);
+    return result;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 

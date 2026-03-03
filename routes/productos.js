@@ -2,7 +2,7 @@ import express from 'express'
 import * as productodb from "../modelos_db/productos.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { productoSchema, productoOpcionales } from '../validaciones/productos.js'
-import { idSchema } from '../validaciones/general.js'
+import { idSchema, paginadoSchema } from '../validaciones/general.js'
 import { validador } from '../middleware/validador.js'
 import { validarToken } from '../middleware/validarToken.js'
 import validadorRol from '../middleware/validadorRol.js'
@@ -36,6 +36,18 @@ router.get('/productoPorCategoria', validadorRol('admin', 'cliente', 'empleado')
         const id = req.query.id
         const productos = await productodb.traerProductoPorCategoria(conexion, id)
         res.send(productos)
+    } catch (err) {
+        res.status(400).send(err.details)
+    }
+})
+
+// listado paginado dinámico
+router.get('/', validadorRol('admin', 'cliente', 'empleado'), validador(paginadoSchema, 'query'), async (req, res) => {
+    try {
+        const page = Number(req.query.page || 1)
+        const limit = Number(req.query.limit || 15)
+        const resultado = await productodb.traerTodosProductos(conexion, page, limit)
+        res.json(resultado)
     } catch (err) {
         res.status(400).send(err.details)
     }

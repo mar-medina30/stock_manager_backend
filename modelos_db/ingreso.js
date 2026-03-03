@@ -35,15 +35,12 @@ export const modificarIngreso = async (conexion, id, producto_id, cantidad, fech
     }
 }
 
-export const traerTodosIngresos = async (conexion) => {
-    try {
-        const [results] = await conexion.query(
-            "SELECT id, producto_id, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') AS fecha_ingreso, cantidad, lote, DATE_FORMAT(vencimiento, '%Y-%m-%d') AS vencimiento, precio_costo, precio_venta FROM ingreso"
-        )
-        console.log(results)
-    } catch (err) {
-        console.log(err)
-    }
+import { paginar } from "./paginacion.js";
+
+export const traerTodosIngresos = async (conexion, page = 1, limit = 15) => {
+    // usamos columnas personalizadas para formatear fechas
+    const columns = "id, producto_id, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') AS fecha_ingreso, cantidad, lote, DATE_FORMAT(vencimiento, '%Y-%m-%d') AS vencimiento, precio_costo, precio_venta";
+    return paginar(conexion, 'ingreso', page, limit, columns);
 }
 
 // FUNCIÓN PARA TRAER LOS PRODUCTOS QUE SE VENCEN A PARTIR DE TAL FECHA

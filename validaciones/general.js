@@ -31,3 +31,16 @@ export const precioValidacion = Joi.number()
         'number.positive': 'El precio debe ser mayor a 0',
         'any.required': 'Este campo es obligatorio'
 })
+
+// esquema básico de paginación que admite page (>=1) y opcionalmente limit
+export const paginadoSchema = Joi.object({
+    page: Joi.number()
+        .integer()
+        .min(1)
+        .default(1),
+    limit: Joi.number()
+        .integer()
+        .min(1)
+        .max(100)
+        .default(15)
+})

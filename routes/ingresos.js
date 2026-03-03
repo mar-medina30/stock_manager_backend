@@ -3,6 +3,7 @@ import * as ingresodb from "../modelos_db/ingreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
 import { validador } from '../middleware/validador.js'
 import { ingresoCrearSchema, rangoVencimientosSchema, precioProductoSchema, modificarIngresoSchema, stockPorCategoriaSchema } from '../validaciones/ingresos.js'
+import { paginadoSchema } from '../validaciones/general.js'
 import validadorRol from '../middleware/validadorRol.js'
 import { validarToken } from '../middleware/validarToken.js'
 const conexion = await iniciardb()
@@ -20,6 +21,18 @@ router.post('/crearIngreso', validadorRol('admin', 'cliente', 'empleado'), valid
     const { producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta } = req.body
     const [ingreso] = await ingresodb.crearIngreso(conexion, producto_id, fecha_ingreso, cantidad, lote, vencimiento, precio_costo, precio_venta)
     res.json({ ...req.body, id: ingreso.insertId })
+})
+
+// listado paginado dinámico de ingresos
+router.get('/', validadorRol('admin', 'cliente', 'empleado'), validador(paginadoSchema, 'query'), async (req, res) => {
+    try {
+        const page = Number(req.query.page || 1)
+        const limit = Number(req.query.limit || 15)
+        const resultado = await ingresodb.traerTodosIngresos(conexion, page, limit)
+        res.json(resultado)
+    } catch (err) {
+        res.status(400).send(err.details)
+    }
 })
 
 router.get('/rangoDeVencimiento', validadorRol('admin', 'cliente', 'empleado'), validador(rangoVencimientosSchema, 'query'), async (req, res) => {

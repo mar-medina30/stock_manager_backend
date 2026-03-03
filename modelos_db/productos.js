@@ -1,15 +1,12 @@
 import conexion_db from "./conexion_db.js"
+import { paginar } from "./paginacion.js"
 
-export const traerTodosProductos = async (conexion) => {
-    try {
-        const [results] = await conexion.query(
-            'SELECT * FROM `producto`'
-        );
-        console.log(results)
-        return results
-    } catch (err) {
-        console.log(err)
-    }
+/**
+ * Devuelve un objeto con { data, totalItems, totalPages, currentPage, perPage }
+ * utilizando la función genérica paginar. Se puede pasar página y límite opcional.
+ */
+export const traerTodosProductos = async (conexion, page = 1, limit = 15) => {
+    return paginar(conexion, 'producto', page, limit, '*')
 }
 
 // FUNCIÓN PARA CREAR PRODUCTO

@@ -1,7 +1,7 @@
 import express from 'express'
 import * as egresodb from "../modelos_db/egreso.js"
 import iniciardb from "../modelos_db/conexion_db.js"
-import { fechaSchema } from '../validaciones/general.js'
+import { fechaSchema, paginadoSchema } from '../validaciones/general.js'
 import { validador } from '../middleware/validador.js'
 import { egresoLoteCantidadProductoIdSchema } from '../validaciones/egreso.js'
 import validadorRol from '../middleware/validadorRol.js'
@@ -14,6 +14,18 @@ const timeLog = (req, res, next) => {
     next()
 }
 //router.use(timeLog)
+
+// listado paginado dinámico de egresos
+router.get('/', validadorRol('admin', 'cliente', 'empleado'), validador(paginadoSchema, 'query'), async (req, res) => {
+    try {
+        const page = Number(req.query.page || 1)
+        const limit = Number(req.query.limit || 15)
+        const resultado = await egresodb.traerTodosEgresos(conexion, page, limit)
+        res.json(resultado)
+    } catch (err) {
+        res.status(400).send(err.details)
+    }
+})
 
 router.get('/calcularGanancia', validadorRol('admin', 'cliente', 'empleado'), validador(fechaSchema, 'query'), async (req, res) => {
     try {

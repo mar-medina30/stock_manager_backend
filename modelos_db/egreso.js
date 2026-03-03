@@ -1,4 +1,10 @@
 import conexion_db from "./conexion_db.js"
+import { paginar } from "./paginacion.js"
+
+
+export const traerTodosEgresos = async (conexion, page = 1, limit = 15) => {
+    return paginar(conexion, 'egreso', page, limit, '*');
+}
 
 // CALCULAR GANANCIA ENTRE 2 FECHAS
 export const calcularGanancia = async (conexion, fecha_inicio, fecha_fin) => {
