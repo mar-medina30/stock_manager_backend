@@ -63,7 +63,7 @@ router.delete('/eliminarProducto', validadorRol('admin', 'cliente'), validador(i
     }
 })
 
-router.post('/modificarProducto', validadorRol('admin', 'cliente', 'empleado'), validador(productoOpcionales), async (req, res) => {
+router.post('/modificarProducto', validadorRol('admin', 'cliente'), validador(productoOpcionales), async (req, res) => {
     //await productoConId.validateAsync(req.body)
     const { id, nombre, categoriaID, activo } = req.body
     const resultado = await productodb.modificarProducto(conexion, id, nombre, categoriaID, activo)
