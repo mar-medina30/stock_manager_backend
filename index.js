@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import iniciardb from "./modelos_db/conexion_db.js"
 import express from 'express'
 import { validarToken } from "./middleware/validarToken.js"
+import cors from 'cors'
 
 dotenv.config()
 
@@ -14,6 +15,8 @@ import rolRoute from "./routes/rol.js"
 
 const app = express()
 const port = process.env.PORT || 3000
+
+app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use("/usuario", usuarioRoute)
 app.use("/producto", validarToken, productoRoute)

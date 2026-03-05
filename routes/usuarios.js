@@ -11,7 +11,7 @@ const conexion = await iniciardb()
 const router = express.Router()
 
 // RUTA PARA CREAR UN NUEVO USUARIO
-router.post('/crear', validadorRol('admin', 'cliente', 'empleado'), validador(usuarioCrearSchema), async (req, res) => {
+router.post('/crear', validador(usuarioCrearSchema), async (req, res) => {
     try {
         const { nombre, email, password, activo = true } = req.body
 
@@ -65,9 +65,9 @@ router.post('/login', validador(usuarioLoginSchema), async (req, res) => {
             JOIN rol_usuario ru ON r.id = ru.rol_id
             WHERE ru.usuario_id = ?
         `;
-        
+
         const [rolesDb] = await conexion.query(queryRoles, [usuario.id])
-        
+
         // 'rolesDb' será algo como: [ { nombre: 'cliente' }, { nombre: 'empelado' } ]
         // Lo convertimos a un array simple: ['cliente', 'empleado']
         const listaRoles = rolesDb.map(row => row.nombre)
